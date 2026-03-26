@@ -6,6 +6,7 @@ This is the shortest path to the scripts in this repo.
 
 | Script | Purpose | State change |
 | --- | --- | --- |
+| `scripts\bootstrap-z-drive.ps1` | Install/configure prerequisites and start | Yes |
 | `scripts\start-z-drive.ps1` | Start WebDAV and map `Z:` | Yes |
 | `scripts\serve-rclone-google.ps1` | Start the rclone WebDAV listener | Yes |
 | `scripts\map-z-drive.ps1` | Map `Z:` to localhost WebDAV | Yes |
@@ -16,6 +17,7 @@ This is the shortest path to the scripts in this repo.
 ## Common sequence
 
 ```powershell
+.\scripts\bootstrap-z-drive.ps1
 .\scripts\start-z-drive.ps1
 .\scripts\test-z-drive-stack.ps1
 .\scripts\unmap-z-drive.ps1

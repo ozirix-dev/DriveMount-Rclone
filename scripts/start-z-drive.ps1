@@ -1,5 +1,6 @@
 param(
-    [string]$ProjectRoot = (Split-Path -Parent $PSScriptRoot)
+    [string]$ProjectRoot = (Split-Path -Parent $PSScriptRoot),
+    [bool]$UseTranscript = $true
 )
 
 $ErrorActionPreference = 'Stop'
@@ -14,18 +15,28 @@ if (-not (Test-Path $logDir)) {
 $timestamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $transcript = Join-Path $logDir ("start-z-drive-$timestamp.log")
 
-$transcriptStarted = $false
-try {
-    Start-Transcript -Path $transcript -ErrorAction Stop | Out-Null
-    $transcriptStarted = $true
-} catch {
-    Write-Warning "Could not start transcript at $transcript"
+if ($UseTranscript) {
+    $transcriptStarted = $false
+    try {
+        Start-Transcript -Path $transcript -ErrorAction Stop | Out-Null
+        $transcriptStarted = $true
+    } catch {
+        Write-Warning "Could not start transcript at $transcript"
+    }
+}
+else {
+    $transcriptStarted = $false
 }
 
 try {
     Write-Host ''
-    Write-Host 'DriveMount-Rclone bootstrap started...'
-    Write-Host "Transcript: $transcript"
+    Write-Host 'DriveMount-Rclone start sequence started...'
+    if ($UseTranscript) {
+        Write-Host "Transcript: $transcript"
+    }
+    else {
+        Write-Host 'Transcript: disabled'
+    }
 
     if (-not (Test-Path $serveScript)) {
         throw "Missing script: $serveScript"

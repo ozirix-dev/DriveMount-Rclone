@@ -9,6 +9,9 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+$common = Join-Path $PSScriptRoot 'DriveMount-Rclone.common.ps1'
+. $common
+
 $LogDir = Join-Path $ProjectRoot 'logs'
 if (-not (Test-Path $LogDir)) {
     New-Item -ItemType Directory -Path $LogDir | Out-Null
@@ -27,9 +30,9 @@ if ($existingListener) {
     throw "Port $ListenPort is already in use by another process."
 }
 
-$rcloneCommand = Get-Command 'rclone.exe' -ErrorAction SilentlyContinue
-if (-not $rcloneCommand) {
-    throw 'rclone.exe not found in PATH.'
+$rclonePath = Resolve-DriveMountRcloneExecutable
+if (-not $rclonePath) {
+    throw 'rclone.exe not found in PATH or known local install locations.'
 }
 
 $arguments = @(
@@ -40,7 +43,7 @@ $arguments = @(
     '--log-level', 'INFO'
 )
 
-$process = Start-Process -FilePath $rcloneCommand.Source -ArgumentList $arguments -WindowStyle Hidden -PassThru
+$process = Start-Process -FilePath $rclonePath -ArgumentList $arguments -WindowStyle Hidden -PassThru
 
 $ready = $false
 for ($i = 0; $i -lt $StartupWaitSeconds; $i++) {

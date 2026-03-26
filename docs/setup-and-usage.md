@@ -4,9 +4,25 @@
 
 - Windows
 - PowerShell
-- `rclone.exe` available in `PATH`
+- `winget` available if you want the bootstrap script to install `rclone`
 - an existing rclone remote named `rclone-google:`
 - Windows WebClient service available
+
+## Fresh machine path
+
+If this is a new machine or the local rclone install is missing, use:
+
+```powershell
+.\scripts\bootstrap-z-drive.ps1
+```
+
+That bootstrap path will:
+
+- try to find `rclone.exe`
+- install rclone with `winget` if needed and allowed
+- launch the rclone config wizard if the `rclone-google:` remote is missing
+- start the WebClient service if needed
+- start the stack and map `Z:`
 
 ## Recommended run order
 
@@ -17,6 +33,7 @@
 ## Common commands
 
 ```powershell
+.\scripts\bootstrap-z-drive.ps1
 .\scripts\start-z-drive.ps1
 .\scripts\test-z-drive-stack.ps1
 .\scripts\unmap-z-drive.ps1
@@ -31,6 +48,8 @@
 - waits for `127.0.0.1:8080`
 - maps `Z:`
 - writes a wrapper transcript log
+
+`bootstrap-z-drive.ps1` is the preferred path for a fresh machine because it can also handle install and remote setup in one pass.
 
 ## Runtime expectations
 

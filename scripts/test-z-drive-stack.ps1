@@ -6,13 +6,16 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+$common = Join-Path $PSScriptRoot 'DriveMount-Rclone.common.ps1'
+. $common
+
 $results = [ordered]@{}
 
-$results.RcloneExe = [bool](Get-Command 'rclone.exe' -ErrorAction SilentlyContinue)
+$rclonePath = Resolve-DriveMountRcloneExecutable
+$results.RcloneExe = [bool]$rclonePath
 
 try {
-    $remoteList = & rclone listremotes 2>$null
-    $results.RemoteConfigured = $remoteList -contains $RemoteName
+    $results.RemoteConfigured = Test-DriveMountRcloneRemoteConfigured -RclonePath $rclonePath -RemoteName $RemoteName
 } catch {
     $results.RemoteConfigured = $false
 }
@@ -20,8 +23,7 @@ try {
 $webClient = Get-Service -Name WebClient -ErrorAction SilentlyContinue
 $results.WebClientRunning = [bool]($webClient -and $webClient.Status -eq 'Running')
 
-$listener = Get-NetTCPConnection -State Listen -LocalAddress '127.0.0.1' -LocalPort $ListenPort -ErrorAction SilentlyContinue
-$results.ListenerActive = [bool]$listener
+$results.ListenerActive = Test-DriveMountRcloneListener -ListenPort $ListenPort
 
 $driveName = $DriveLetter.TrimEnd(':')
 $drive = Get-PSDrive -Name $driveName -ErrorAction SilentlyContinue

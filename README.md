@@ -12,6 +12,14 @@ This repo is a clean local-first V1 for:
 
 ## Quick Start
 
+Fresh machine or first-time setup:
+
+```powershell
+.\scripts\bootstrap-z-drive.ps1
+```
+
+Normal day-to-day start:
+
 ```powershell
 .\scripts\start-z-drive.ps1
 .\scripts\test-z-drive-stack.ps1
@@ -33,6 +41,7 @@ That wrapper performs the normal startup sequence in one place instead of relyin
 
 ## Script Map
 
+- `scripts\bootstrap-z-drive.ps1` installs or configures prerequisites, then starts the stack
 - `scripts\start-z-drive.ps1` boots the full stack
 - `scripts\serve-rclone-google.ps1` starts the WebDAV serving layer
 - `scripts\map-z-drive.ps1` maps `Z:`
@@ -88,6 +97,7 @@ Logs are ignored by git on purpose.
 ## Docs
 
 - `docs\architecture.md`
+- `docs\bootstrap-and-install.md`
 - `docs\setup-and-usage.md`
 - `docs\command-reference.md`
 - `docs\tasks-plan.md`
