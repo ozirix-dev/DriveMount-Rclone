@@ -1,0 +1,58 @@
+# Architecture
+
+## Overview
+
+This project uses a simple three-step stack:
+
+```mermaid
+flowchart LR
+  start["start-z-drive.ps1"] --> serve["serve-rclone-google.ps1"]
+  serve --> rclone["rclone.exe serve webdav"]
+  rclone --> webdav["http://127.0.0.1:8080/"]
+  webdav --> map["map-z-drive.ps1"]
+  map --> z["Z: drive"]
+```
+
+## Components
+
+### rclone remote
+
+The project expects an existing rclone remote named `rclone-google:`.
+
+That remote is machine-local configuration and is not stored in this repo.
+
+### WebDAV serving layer
+
+`serve-rclone-google.ps1` starts `rclone serve webdav` and exposes the remote on `127.0.0.1:8080`.
+
+That localhost endpoint is the bridge between rclone and Windows drive mapping.
+
+### Drive mapping
+
+`map-z-drive.ps1` maps `Z:` to `http://localhost:8080/` through the Windows WebClient/WebDAV path.
+
+`Z:` is the current documented V1 drive letter.
+
+### Orchestration
+
+`start-z-drive.ps1` is preferred because it coordinates the normal sequence in one place:
+
+1. ensure WebDAV is running
+2. wait for the endpoint to become available
+3. map `Z:`
+4. log what happened
+
+This is preferred over half-manual sequencing because it reduces the chance of a missing step or mismatched state.
+
+## Why separate from app repos
+
+This is machine infrastructure, not product code.
+
+Keeping it separate avoids mixing:
+
+- application domain files
+- local automation
+- machine-local credentials
+- runtime logs
+
+That separation makes later maintenance safer and keeps the project easier to reason about.

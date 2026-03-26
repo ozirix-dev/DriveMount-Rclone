@@ -1,0 +1,17 @@
+logs/*
+!logs/.gitkeep
+*.log
+*.tmp
+*.bak
+*.orig
+*.rej
+*.swp
+*.swo
+Thumbs.db
+Desktop.ini
+.DS_Store
+.vscode/
+.idea/
+*.user
+*.suo
+*.cache
