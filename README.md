@@ -10,23 +10,35 @@ This repo is a clean local-first V1 for:
 - unmapping and stopping the stack safely
 - keeping machine-local logs out of git
 
+## Quick Start
+
+```powershell
+.\scripts\start-z-drive.ps1
+.\scripts\test-z-drive-stack.ps1
+```
+
+If you need to detach the drive:
+
+```powershell
+.\scripts\unmap-z-drive.ps1
+```
+
 ## What this solves
 
 The practical goal is a stable local drive letter backed by Google Drive through rclone and Windows WebDAV.
 
-The preferred operator path is:
+The preferred operator path is `start-z-drive.ps1`.
 
-`start-z-drive.ps1`
+That wrapper performs the normal startup sequence in one place instead of relying on scattered manual steps.
 
-That wrapper is meant to do the normal startup sequence in one place instead of relying on scattered manual steps.
+## Script Map
 
-## Basic flow
-
-1. `serve-rclone-google.ps1` starts `rclone serve webdav` on `127.0.0.1:8080`.
-2. `map-z-drive.ps1` maps `Z:` to `http://localhost:8080/`.
-3. `test-z-drive-stack.ps1` checks the stack without changing state.
-4. `unmap-z-drive.ps1` removes the `Z:` mapping.
-5. `stop-z-drive.ps1` stops the project-controlled rclone WebDAV process.
+- `scripts\start-z-drive.ps1` boots the full stack
+- `scripts\serve-rclone-google.ps1` starts the WebDAV serving layer
+- `scripts\map-z-drive.ps1` maps `Z:`
+- `scripts\test-z-drive-stack.ps1` performs read-only checks
+- `scripts\unmap-z-drive.ps1` removes `Z:`
+- `scripts\stop-z-drive.ps1` stops the project-controlled WebDAV process
 
 ## What is in scope
 
@@ -73,7 +85,15 @@ Runtime logs live in `logs\`.
 
 Logs are ignored by git on purpose.
 
+## Docs
+
+- `docs\architecture.md`
+- `docs\setup-and-usage.md`
+- `docs\command-reference.md`
+- `docs\tasks-plan.md`
+- `docs\known-risks-and-open-questions.md`
+
 ## Status
 
-This is a V1 bootstrap.
+This is a V1 bootstrap with a light V2 cleanup on top.
 The repo is intentionally small and focused so it can be turned into a separate GitHub project cleanly later.

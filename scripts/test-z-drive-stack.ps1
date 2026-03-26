@@ -34,7 +34,9 @@ foreach ($key in $results.Keys) {
 }
 
 if ($results.Values -contains $false) {
+    Write-Host 'One or more checks failed.'
     exit 1
 }
 
+Write-Host 'All checks passed.'
 exit 0

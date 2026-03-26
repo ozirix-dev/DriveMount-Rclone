@@ -25,6 +25,7 @@ try {
 try {
     Write-Host ''
     Write-Host 'DriveMount-Rclone bootstrap started...'
+    Write-Host "Transcript: $transcript"
 
     if (-not (Test-Path $serveScript)) {
         throw "Missing script: $serveScript"

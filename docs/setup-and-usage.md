@@ -14,6 +14,15 @@
 2. `scripts\test-z-drive-stack.ps1`
 3. `scripts\unmap-z-drive.ps1` when you want to detach the drive
 
+## Common commands
+
+```powershell
+.\scripts\start-z-drive.ps1
+.\scripts\test-z-drive-stack.ps1
+.\scripts\unmap-z-drive.ps1
+.\scripts\stop-z-drive.ps1
+```
+
 ## What the wrapper does
 
 `start-z-drive.ps1` is the preferred path because it:
@@ -22,6 +31,13 @@
 - waits for `127.0.0.1:8080`
 - maps `Z:`
 - writes a wrapper transcript log
+
+## Runtime expectations
+
+- `Z:` is the documented V1 drive letter.
+- `127.0.0.1:8080` is the documented WebDAV endpoint.
+- `rclone-google:` is the expected remote name.
+- Logs are written only to `logs\`.
 
 ## How to test
 
@@ -38,6 +54,12 @@ It checks:
 - whether `WebClient` is running
 - whether `127.0.0.1:8080` is listening
 - whether `Z:` is visible in the current session
+
+For a compact status table, use:
+
+```powershell
+.\scripts\test-z-drive-stack.ps1
+```
 
 ## How to read logs
 
@@ -64,3 +86,4 @@ If the wrapper says WebDAV is up but mapping still fails, check the rclone log f
 - scheduled task repair
 - auto-push to GitHub
 - auto-repair of auth tokens
+- remote re-auth flow
