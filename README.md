@@ -114,6 +114,6 @@ Do not share log files publicly without reviewing them first.
 ## Status
 
 This repo is intentionally small, focused, and public-safe.
-It is meant to stay easy to review, easy to run locally, and easy to maintain as an infra project.
+It is a documented working solution for one Windows mount setup, not a general-purpose sync framework.
 
-Licensed under the MIT License. See [LICENSE](LICENSE).
+License: MIT. See [LICENSE](LICENSE).
