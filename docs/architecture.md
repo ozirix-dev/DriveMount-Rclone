@@ -77,8 +77,8 @@ That separation makes later maintenance safer and keeps the project easier to re
 
 ## Observed workload behavior
 
-These are practical results from real copy-based tests on the mounted Google Drive path, not guarantees.
-They are a better fit for this stack than synthetic local-disk benchmarks such as `fsutil`.
+These are practical results from real copy-based tests on this machine's mounted Google Drive path, not guarantees.
+They are more representative for this stack than synthetic local-disk benchmarks such as `fsutil`.
 
 Observed large-file copy throughput:
 
@@ -106,7 +106,7 @@ Practical interpretation:
 - Large sequential copies are a good fit for this stack.
 - Small-file workloads are a weak fit.
 - Parallel small-file copy helps somewhat, but remains clearly slower than large-file transfer.
-- Remote cleanup may complete before stale directory entries disappear from the mounted `Z:` view.
+- Mounted WebDAV directory views may lag behind true remote state after delete operations on this stack.
 
 Recommended use cases:
 

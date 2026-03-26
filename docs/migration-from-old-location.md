@@ -21,7 +21,7 @@
 
 ## Normalized documentation
 
-The old note file with the emoji-heavy name has been replaced by normal repo docs:
+The earlier note file has been replaced by normal repo docs:
 
 - `docs\architecture.md`
 - `docs\setup-and-usage.md`

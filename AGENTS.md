@@ -18,7 +18,7 @@ This repository is a Windows infra and automation project, not an application re
 ## Scope discipline
 
 - Stay inside the repository root unless the user explicitly asks for a wider audit.
-- Do not touch the old local source tree except for read-only comparison if needed.
+- Do not touch the previous source tree except for read-only comparison if needed.
 - Do not touch other project workspaces.
 - Do not introduce extra abstraction layers unless they clearly reduce risk or duplication.
 

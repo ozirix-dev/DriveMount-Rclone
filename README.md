@@ -113,5 +113,5 @@ Do not share log files publicly without reviewing them first.
 
 ## Status
 
-This is a V1 bootstrap with a light V2 cleanup on top.
-The repo is intentionally small and focused so it can be turned into a separate GitHub project cleanly later.
+This repo is intentionally small, focused, and public-safe.
+It is meant to stay easy to review, easy to run locally, and easy to maintain as an infra project.
