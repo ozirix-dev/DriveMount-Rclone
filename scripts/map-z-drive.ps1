@@ -1,9 +1,29 @@
+<#
+.SYNOPSIS
+Maps the configured drive letter to the project WebDAV endpoint.
+
+.DESCRIPTION
+Validates that the expected rclone WebDAV listener is active before mapping
+the Windows drive letter to the configured localhost WebDAV URL.
+
+.EXAMPLE
+.\scripts\map-z-drive.ps1
+#>
 param(
-    [string]$DriveLetter = 'Z:',
-    [string]$WebDavUrl = 'http://localhost:8080/'
+    [string]$DriveLetter,
+    [int]$ListenPort,
+    [string]$RemoteName,
+    [string]$ListenAddress,
+    [string]$WebDavUrl,
+    [string]$ExpectedDisplayRoot
 )
 
 $ErrorActionPreference = 'Stop'
+
+$common = Join-Path $PSScriptRoot 'DriveMount-Rclone.common.ps1'
+. $common
+
+$runtime = Get-DriveMountRcloneRuntimeSettings -Overrides $PSBoundParameters
 
 Write-Host ''
 Write-Host 'Checking WebClient service...'
@@ -15,37 +35,48 @@ if (-not $service) {
 if ($service.Status -ne 'Running') {
     Start-Service -Name WebClient
     Write-Host 'WebClient service started'
-} else {
+}
+else {
     Write-Host 'WebClient already running'
 }
 
 Write-Host ''
-Write-Host 'Checking listener 127.0.0.1:8080...'
-$listener = Get-NetTCPConnection -State Listen -LocalAddress '127.0.0.1' -LocalPort 8080 -ErrorAction SilentlyContinue
-if (-not $listener) {
-    throw '127.0.0.1:8080 is DOWN'
+Write-Host "Checking listener $($runtime.ListenAddress)..."
+$listenerState = Get-DriveMountRcloneWebDavListenerState -RuntimeSettings $runtime
+if (-not $listenerState.ListenerActive) {
+    throw "$($runtime.ListenAddress) is DOWN"
 }
-Write-Host '127.0.0.1:8080 is UP'
+
+if (-not $listenerState.ProcessOwnedByProject) {
+    throw "Listener on $($runtime.ListenAddress) is not the expected project process. $($listenerState.Reason)"
+}
+
+Write-Host "$($runtime.ListenAddress) is UP and owned by the project"
 
 Write-Host ''
-Write-Host "Checking if $DriveLetter already mapped..."
-$drive = Get-PSDrive -Name ($DriveLetter.TrimEnd(':')) -ErrorAction SilentlyContinue
-if ($drive) {
-    if ($drive.DisplayRoot -eq '\\localhost@8080\DavWWWRoot') {
-        Write-Host "$DriveLetter already exists. Exiting."
+Write-Host "Checking if $($runtime.DriveLetter) already mapped..."
+$driveState = Test-DriveMountRcloneDriveMappingState -RuntimeSettings $runtime
+if ($driveState.DriveVisibleInShell) {
+    if ($driveState.DrivePointsToExpectedRoot) {
+        Write-Host "$($runtime.DriveLetter) already exists. Exiting."
         return
     }
 
-    throw "$DriveLetter already exists but points to '$($drive.DisplayRoot)'."
+    throw "$($runtime.DriveLetter) already exists but points to '$($driveState.ActualDisplayRoot)'."
 }
 
 Write-Host ''
-Write-Host "Mapping $DriveLetter drive..."
-net use $DriveLetter $WebDavUrl /user:ignored ignored /persistent:yes | Out-Null
+Write-Host "Mapping $($runtime.DriveLetter) drive..."
+net use $($runtime.DriveLetter) $runtime.WebDavUrl /user:ignored ignored /persistent:yes | Out-Null
 
 if ($LASTEXITCODE -eq 0) {
-    Write-Host "$DriveLetter successfully mapped"
+    $driveState = Test-DriveMountRcloneDriveMappingState -RuntimeSettings $runtime
+    if (-not $driveState.DrivePointsToExpectedRoot) {
+        throw "$($runtime.DriveLetter) mapping did not resolve to $($runtime.ExpectedDisplayRoot)."
+    }
+
+    Write-Host "$($runtime.DriveLetter) successfully mapped"
     return
 }
 
-throw "$DriveLetter mapping failed"
+throw "$($runtime.DriveLetter) mapping failed"

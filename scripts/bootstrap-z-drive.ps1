@@ -1,7 +1,39 @@
+<# 
+.SYNOPSIS
+Bootstraps DriveMount-Rclone on a Windows machine.
+
+.DESCRIPTION
+Installs or validates rclone, ensures the configured remote exists, starts WebClient,
+and optionally launches the standard DriveMount-Rclone startup chain.
+
+.PARAMETER ProjectRoot
+Project root used for local logs and script coordination.
+
+.PARAMETER NoInstall
+Skip rclone installation if the executable is missing.
+
+.PARAMETER NoRemoteConfig
+Skip the interactive rclone config wizard if the remote is missing.
+
+.PARAMETER NoStart
+Prepare prerequisites without starting and mapping the drive.
+
+.EXAMPLE
+.\scripts\bootstrap-z-drive.ps1
+
+.EXAMPLE
+.\scripts\bootstrap-z-drive.ps1 -NoStart
+#>
 param(
     [string]$ProjectRoot = (Split-Path -Parent $PSScriptRoot),
-    [string]$RemoteName = 'rclone-google:',
-    [string]$DriveLetter = 'Z:',
+    [string]$RemoteName,
+    [string]$DriveLetter,
+    [int]$ListenPort,
+    [string]$ListenAddress,
+    [string]$WebDavUrl,
+    [string]$ExpectedDisplayRoot,
+    [string]$LogDirectoryName,
+    [string]$RcloneLogFileName,
     [switch]$NoInstall,
     [switch]$NoRemoteConfig,
     [switch]$NoStart
@@ -11,7 +43,9 @@ $ErrorActionPreference = 'Stop'
 
 . (Join-Path $PSScriptRoot 'DriveMount-Rclone.common.ps1')
 
-$logDir = Ensure-DriveMountRcloneLogDirectory -ProjectRoot $ProjectRoot
+$runtime = Get-DriveMountRcloneRuntimeSettings -Overrides $PSBoundParameters
+
+$logDir = Ensure-DriveMountRcloneLogDirectory -ProjectRoot $ProjectRoot -LogDirectoryName $runtime.LogDirectoryName
 $timestamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $transcript = Join-Path $logDir ("bootstrap-z-drive-$timestamp.log")
 
@@ -89,7 +123,7 @@ try {
     Write-Host "Transcript: $transcript"
 
     $rclonePath = Install-RcloneIfNeeded -AllowInstall (-not $NoInstall)
-    Ensure-RemoteConfigured -RclonePath $rclonePath -RemoteName $RemoteName -AllowConfig (-not $NoRemoteConfig)
+    Ensure-RemoteConfigured -RclonePath $rclonePath -RemoteName $runtime.RemoteName -AllowConfig (-not $NoRemoteConfig)
 
     $webClient = Get-Service -Name WebClient -ErrorAction SilentlyContinue
     if (-not $webClient) {
@@ -110,11 +144,21 @@ try {
             throw "Missing script: $startScript"
         }
 
-        & $startScript -ProjectRoot $ProjectRoot -UseTranscript:$false
+        & $startScript `
+            -ProjectRoot $ProjectRoot `
+            -RemoteName $runtime.RemoteName `
+            -DriveLetter $runtime.DriveLetter `
+            -ListenPort $runtime.ListenPort `
+            -ListenAddress $runtime.ListenAddress `
+            -WebDavUrl $runtime.WebDavUrl `
+            -ExpectedDisplayRoot $runtime.ExpectedDisplayRoot `
+            -LogDirectoryName $runtime.LogDirectoryName `
+            -RcloneLogFileName $runtime.RcloneLogFileName `
+            -UseTranscript:$false
 
-        $drive = Get-PSDrive -Name ($DriveLetter.TrimEnd(':')) -ErrorAction SilentlyContinue
-        if (-not $drive -or $drive.DisplayRoot -ne '\\localhost@8080\DavWWWRoot') {
-            throw "$DriveLetter did not become available after bootstrap."
+        $driveState = Test-DriveMountRcloneDriveMappingState -RuntimeSettings $runtime
+        if (-not $driveState.DriveVisibleInShell -or -not $driveState.DrivePointsToExpectedRoot) {
+            throw (("{0} did not become available after bootstrap. Actual root: {1}" -f $runtime.DriveLetter, $driveState.ActualDisplayRoot))
         }
     }
 

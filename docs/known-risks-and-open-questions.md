@@ -1,11 +1,15 @@
 # Known risks and open questions
 
-## Risks
+## Current behavior
 
-- `rclone.exe` is still resolved from `PATH` in V1.
-- `localhost:8080` is still a fixed assumption.
-- `Z:` is still hard-coded as the V1 drive letter.
+- `scripts\DriveMount-Rclone.common.ps1` is the source of truth for the current runtime defaults.
+- `rclone.exe` resolves from `PATH` or known local install locations.
+- The default listener is `127.0.0.1:8080`.
+- The default WebDAV URL is `http://localhost:8080/`.
+- The default mapped drive is `Z:`.
+- The expected mapped UNC root is `\\localhost@8080\DavWWWRoot`.
 - The local remote config is machine-specific and lives outside git.
+- Listener checks now verify that the port owner matches the expected project `rclone serve webdav` command line before stop/test actions proceed.
 
 ## Open questions
 

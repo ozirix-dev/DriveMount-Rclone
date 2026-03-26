@@ -52,6 +52,8 @@ That bootstrap path will:
 
 `bootstrap-z-drive.ps1` is the preferred path for a fresh machine because it can also handle install and remote setup in one pass.
 
+Both scripts use the shared runtime defaults from `scripts\DriveMount-Rclone.common.ps1`, so the expected drive root, remote name, and localhost endpoint stay aligned.
+
 ## Runtime expectations
 
 - `Z:` is the documented V1 drive letter.
@@ -73,6 +75,7 @@ It checks:
 - whether the `rclone-google:` remote exists
 - whether `WebClient` is running
 - whether `127.0.0.1:8080` is listening
+- whether that listener is owned by the expected project `rclone serve webdav` process
 - whether `Z:` is visible in the current session
 
 ## How to read logs

@@ -9,6 +9,7 @@ This repo is a clean local-first V1 for:
 - checking whether the stack is healthy
 - unmapping and stopping the stack safely
 - keeping machine-local logs out of git
+- keeping runtime defaults centralized in `scripts\DriveMount-Rclone.common.ps1`
 
 ## Quick Start
 
@@ -38,6 +39,7 @@ The practical goal is a stable local drive letter backed by Google Drive through
 The preferred operator path is `start-z-drive.ps1`.
 
 That wrapper performs the normal startup sequence in one place instead of relying on scattered manual steps.
+It uses the same runtime defaults and expected-state checks as the bootstrap, test, and stop scripts.
 
 ## Script Map
 

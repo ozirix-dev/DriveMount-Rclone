@@ -1,5 +1,33 @@
+<#
+.SYNOPSIS
+Starts the normal DriveMount-Rclone operator chain.
+
+.DESCRIPTION
+Starts the rclone WebDAV process if needed, maps the configured drive letter,
+and verifies the expected drive mapping is present in the current session.
+
+.PARAMETER ProjectRoot
+Project root used for local logs and script coordination.
+
+.PARAMETER UseTranscript
+Enable or disable the wrapper transcript log.
+
+.EXAMPLE
+.\scripts\start-z-drive.ps1
+
+.EXAMPLE
+.\scripts\start-z-drive.ps1 -UseTranscript:$false
+#>
 param(
     [string]$ProjectRoot = (Split-Path -Parent $PSScriptRoot),
+    [string]$RemoteName,
+    [string]$DriveLetter,
+    [int]$ListenPort,
+    [string]$ListenAddress,
+    [string]$WebDavUrl,
+    [string]$ExpectedDisplayRoot,
+    [string]$LogDirectoryName,
+    [string]$RcloneLogFileName,
     [bool]$UseTranscript = $true
 )
 
@@ -7,10 +35,9 @@ $ErrorActionPreference = 'Stop'
 
 $serveScript = Join-Path $PSScriptRoot 'serve-rclone-google.ps1'
 $mapScript = Join-Path $PSScriptRoot 'map-z-drive.ps1'
-$logDir = Join-Path $ProjectRoot 'logs'
-if (-not (Test-Path $logDir)) {
-    New-Item -ItemType Directory -Path $logDir | Out-Null
-}
+$runtime = Get-DriveMountRcloneRuntimeSettings -Overrides $PSBoundParameters
+
+$logDir = Ensure-DriveMountRcloneLogDirectory -ProjectRoot $ProjectRoot -LogDirectoryName $runtime.LogDirectoryName
 
 $timestamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $transcript = Join-Path $logDir ("start-z-drive-$timestamp.log")
@@ -46,12 +73,25 @@ try {
         throw "Missing script: $mapScript"
     }
 
-    & $serveScript
-    & $mapScript
+    & $serveScript `
+        -ProjectRoot $ProjectRoot `
+        -RemoteName $runtime.RemoteName `
+        -ListenPort $runtime.ListenPort `
+        -ListenAddress $runtime.ListenAddress `
+        -LogDirectoryName $runtime.LogDirectoryName `
+        -RcloneLogFileName $runtime.RcloneLogFileName
 
-    $drive = Get-PSDrive -Name Z -ErrorAction SilentlyContinue
-    if (-not $drive -or $drive.DisplayRoot -ne '\\localhost@8080\DavWWWRoot') {
-        throw 'Z: did not become available after bootstrap.'
+    & $mapScript `
+        -DriveLetter $runtime.DriveLetter `
+        -ListenPort $runtime.ListenPort `
+        -RemoteName $runtime.RemoteName `
+        -ListenAddress $runtime.ListenAddress `
+        -WebDavUrl $runtime.WebDavUrl `
+        -ExpectedDisplayRoot $runtime.ExpectedDisplayRoot
+
+    $driveState = Test-DriveMountRcloneDriveMappingState -RuntimeSettings $runtime
+    if (-not $driveState.DriveVisibleInShell -or -not $driveState.DrivePointsToExpectedRoot) {
+        throw (("{0} did not become available after start. Actual root: {1}" -f $runtime.DriveLetter, $driveState.ActualDisplayRoot))
     }
 
     Write-Host 'DriveMount-Rclone start sequence finished.'

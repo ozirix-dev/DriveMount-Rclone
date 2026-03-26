@@ -23,12 +23,15 @@ Optional skip flags:
 5. Start the WebClient service if it is not already running.
 6. Start the stack and map `Z:`.
 
+The bootstrap path uses the same runtime defaults as the normal operator scripts.
+
 ## What it does not try to hide
 
 - Remote auth still needs a real Google account and user consent.
 - If `rclone-google:` is not configured yet, the config wizard is still interactive.
 - If `winget` is missing, rclone installation cannot be automated.
 - `Z:` and `127.0.0.1:8080` remain the default V1 values.
+- The local expected drive root is derived from the shared runtime settings, so bootstrap and start stay aligned.
 
 ## After bootstrap
 

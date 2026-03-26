@@ -1,9 +1,25 @@
+<#
+.SYNOPSIS
+Starts the project-controlled rclone WebDAV listener.
+
+.DESCRIPTION
+Starts rclone serve webdav on the configured localhost endpoint, reuses the
+current listener if it already belongs to this project, and writes rclone logs
+to the local logs folder.
+
+.PARAMETER ProjectRoot
+Project root used for local logs.
+
+.EXAMPLE
+.\scripts\serve-rclone-google.ps1
+#>
 param(
     [string]$ProjectRoot = (Split-Path -Parent $PSScriptRoot),
-    [string]$RemoteName = 'rclone-google:',
-    [string]$ListenAddress = '127.0.0.1:8080',
-    [int]$ListenPort = 8080,
-    [string]$LogFileName = 'rclone.log',
+    [string]$RemoteName,
+    [int]$ListenPort,
+    [string]$ListenAddress,
+    [string]$LogDirectoryName,
+    [string]$RcloneLogFileName,
     [int]$StartupWaitSeconds = 10
 )
 
@@ -12,22 +28,19 @@ $ErrorActionPreference = 'Stop'
 $common = Join-Path $PSScriptRoot 'DriveMount-Rclone.common.ps1'
 . $common
 
-$LogDir = Join-Path $ProjectRoot 'logs'
-if (-not (Test-Path $LogDir)) {
-    New-Item -ItemType Directory -Path $LogDir | Out-Null
-}
+$runtime = Get-DriveMountRcloneRuntimeSettings -Overrides $PSBoundParameters
+$listenerState = Get-DriveMountRcloneWebDavListenerState -RuntimeSettings $runtime
+$LogDir = Ensure-DriveMountRcloneLogDirectory -ProjectRoot $ProjectRoot -LogDirectoryName $runtime.LogDirectoryName
 
-$LogFile = Join-Path $LogDir $LogFileName
+$LogFile = Join-Path $LogDir $runtime.RcloneLogFileName
 
-$existingListener = Get-NetTCPConnection -State Listen -LocalAddress '127.0.0.1' -LocalPort $ListenPort -ErrorAction SilentlyContinue
-if ($existingListener) {
-    $existingProcess = Get-CimInstance Win32_Process -Filter "ProcessId = $($existingListener.OwningProcess)" -ErrorAction SilentlyContinue
-    if ($existingProcess -and $existingProcess.CommandLine -and $existingProcess.CommandLine -match 'rclone' -and $existingProcess.CommandLine -match 'serve' -and $existingProcess.CommandLine -match 'webdav' -and $existingProcess.CommandLine -match [regex]::Escape($RemoteName)) {
-        Write-Host "Rclone WebDAV already listening at $ListenAddress"
+if ($listenerState.ListenerActive) {
+    if ($listenerState.ProcessOwnedByProject) {
+        Write-Host "Rclone WebDAV already listening at $($runtime.ListenAddress)"
         return
     }
 
-    throw "Port $ListenPort is already in use by another process."
+    throw "Port $($runtime.ListenPort) is already in use by another process. $($listenerState.Reason)"
 }
 
 $rclonePath = Resolve-DriveMountRcloneExecutable
@@ -36,8 +49,8 @@ if (-not $rclonePath) {
 }
 
 $arguments = @(
-    'serve', 'webdav', $RemoteName,
-    '--addr', $ListenAddress,
+    'serve', 'webdav', $runtime.RemoteName,
+    '--addr', $runtime.ListenAddress,
     '--vfs-cache-mode', 'writes',
     '--log-file', $LogFile,
     '--log-level', 'INFO'
@@ -48,8 +61,8 @@ $process = Start-Process -FilePath $rclonePath -ArgumentList $arguments -WindowS
 $ready = $false
 for ($i = 0; $i -lt $StartupWaitSeconds; $i++) {
     Start-Sleep -Seconds 1
-    $listener = Get-NetTCPConnection -State Listen -LocalAddress '127.0.0.1' -LocalPort $ListenPort -ErrorAction SilentlyContinue
-    if ($listener) {
+    $listenerState = Get-DriveMountRcloneWebDavListenerState -RuntimeSettings $runtime
+    if ($listenerState.ListenerActive -and $listenerState.ProcessOwnedByProject) {
         $ready = $true
         break
     }
@@ -60,8 +73,8 @@ for ($i = 0; $i -lt $StartupWaitSeconds; $i++) {
 }
 
 if (-not $ready) {
-    throw "Rclone WebDAV did not open $ListenAddress in time."
+    throw "Rclone WebDAV did not open $($runtime.ListenAddress) in time."
 }
 
-Write-Host "Rclone WebDAV started at $ListenAddress"
+Write-Host "Rclone WebDAV started at $($runtime.ListenAddress)"
 Write-Host "Log file: $LogFile"
