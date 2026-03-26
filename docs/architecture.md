@@ -77,9 +77,45 @@ That separation makes later maintenance safer and keeps the project easier to re
 
 ## Observed workload behavior
 
-These are practical results from local copy tests, not guarantees:
+These are practical results from real copy-based tests on the mounted Google Drive path, not guarantees.
+They are a better fit for this stack than synthetic local-disk benchmarks such as `fsutil`.
 
-- Large sequential copies: good.
-- Small-file workloads: weak.
-- Parallel small-file copy helps somewhat but remains clearly slower than large-file transfer.
+Observed large-file copy throughput:
+
+- `1 MB`: `1.274 s`, `0.78 MB/s`
+- `10 MB`: `0.227 s`, `44.08 MB/s`
+- `50 MB`: `0.808 s`, `61.84 MB/s`
+- `100 MB`: `1.57 s`, `63.69 MB/s`
+- `200 MB`: `3.001 s`, `66.65 MB/s`
+- `500 MB`: `8.232 s`, `60.74 MB/s`
+
+Follow-up larger-file run:
+
+- `500 MB`: `11.11 s`, `44.99 MB/s`
+- `1 GB`: `16.57 s`, `61.79 MB/s`
+- `1.5 GB`: `25.46 s`, `60.33 MB/s`
+- `2 GB`: `35.13 s`, `58.29 MB/s`
+
+Observed small-file behavior:
+
+- `1000 x 64 KB` sequential copies: `57.269 s`, `1.09 MB/s`
+- `800 x 64 KB` parallel copy with `4` jobs: `13.685 s`, `3.65 MB/s`
+
+Practical interpretation:
+
+- Large sequential copies are a good fit for this stack.
+- Small-file workloads are a weak fit.
+- Parallel small-file copy helps somewhat, but remains clearly slower than large-file transfer.
 - Remote cleanup may complete before stale directory entries disappear from the mounted `Z:` view.
+
+Recommended use cases:
+
+- backups of larger files
+- archives
+- large document bundles
+- larger media files
+
+Less ideal use cases:
+
+- workflows dominated by many very small files
+- workflows that assume immediate delete visibility in the mounted folder view
