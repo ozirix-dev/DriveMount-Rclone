@@ -115,3 +115,5 @@ Do not share log files publicly without reviewing them first.
 
 This repo is intentionally small, focused, and public-safe.
 It is meant to stay easy to review, easy to run locally, and easy to maintain as an infra project.
+
+Licensed under the MIT License. See [LICENSE](LICENSE).
