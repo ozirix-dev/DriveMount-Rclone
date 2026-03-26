@@ -14,15 +14,6 @@ This is the shortest path to the scripts in this repo.
 | `scripts\unmap-z-drive.ps1` | Remove the `Z:` mapping | Yes |
 | `scripts\stop-z-drive.ps1` | Stop the project WebDAV process | Yes |
 
-## Common sequence
-
-```powershell
-.\scripts\bootstrap-z-drive.ps1
-.\scripts\start-z-drive.ps1
-.\scripts\test-z-drive-stack.ps1
-.\scripts\unmap-z-drive.ps1
-```
-
 ## Troubleshooting focus
 
 - If `Z:` is missing, check `logs\start-z-drive-*.log` first.

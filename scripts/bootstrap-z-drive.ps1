@@ -2,8 +2,6 @@ param(
     [string]$ProjectRoot = (Split-Path -Parent $PSScriptRoot),
     [string]$RemoteName = 'rclone-google:',
     [string]$DriveLetter = 'Z:',
-    [string]$ListenAddress = '127.0.0.1:8080',
-    [int]$ListenPort = 8080,
     [switch]$NoInstall,
     [switch]$NoRemoteConfig,
     [switch]$NoStart

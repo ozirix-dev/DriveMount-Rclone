@@ -54,7 +54,7 @@ try {
         throw 'Z: did not become available after bootstrap.'
     }
 
-    Write-Host 'DriveMount-Rclone bootstrap finished.'
+    Write-Host 'DriveMount-Rclone start sequence finished.'
 }
 catch {
     Write-Error $_.Exception.Message

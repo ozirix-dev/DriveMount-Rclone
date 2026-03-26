@@ -16,7 +16,7 @@ Optional skip flags:
 
 ## What it tries to do
 
-1. Find an existing `rclone.exe`.
+1. Find an existing `rclone.exe` from `PATH` or known local install locations.
 2. Install rclone with `winget` if it is missing and installation is allowed.
 3. Verify that the `rclone-google:` remote exists.
 4. Launch the rclone config wizard if the remote is missing and configuration is allowed.
@@ -28,6 +28,7 @@ Optional skip flags:
 - Remote auth still needs a real Google account and user consent.
 - If `rclone-google:` is not configured yet, the config wizard is still interactive.
 - If `winget` is missing, rclone installation cannot be automated.
+- `Z:` and `127.0.0.1:8080` remain the default V1 values.
 
 ## After bootstrap
 

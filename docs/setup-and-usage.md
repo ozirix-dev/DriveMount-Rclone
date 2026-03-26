@@ -5,6 +5,7 @@
 - Windows
 - PowerShell
 - `winget` available if you want the bootstrap script to install `rclone`
+- `rclone.exe` available through `PATH` or a known local install location
 - an existing rclone remote named `rclone-google:`
 - Windows WebClient service available
 
@@ -18,7 +19,7 @@ If this is a new machine or the local rclone install is missing, use:
 
 That bootstrap path will:
 
-- try to find `rclone.exe`
+- try to find `rclone.exe` through `PATH` or known local install locations
 - install rclone with `winget` if needed and allowed
 - launch the rclone config wizard if the `rclone-google:` remote is missing
 - start the WebClient service if needed
@@ -73,12 +74,6 @@ It checks:
 - whether `WebClient` is running
 - whether `127.0.0.1:8080` is listening
 - whether `Z:` is visible in the current session
-
-For a compact status table, use:
-
-```powershell
-.\scripts\test-z-drive-stack.ps1
-```
 
 ## How to read logs
 
