@@ -34,6 +34,7 @@ It also provides shared checks for the WebDAV listener and mapped drive state.
 The project expects an existing rclone remote named `rclone-google:`.
 
 That remote is machine-local configuration and is not stored in this repo.
+The repo does not store Google credentials or an auth layer of its own.
 
 ### WebDAV serving layer
 
@@ -59,6 +60,7 @@ That localhost endpoint is the bridge between rclone and Windows drive mapping.
 This is preferred over half-manual sequencing because it reduces the chance of a missing step or mismatched state.
 
 `bootstrap-z-drive.ps1` uses the same runtime defaults, but it adds prerequisite setup and optional first-run config handling.
+If the remote is missing, bootstrap can open the local `rclone config` wizard on the operator machine.
 
 ## Why separate from app repos
 
@@ -68,7 +70,7 @@ Keeping it separate avoids mixing:
 
 - application domain files
 - local automation
-- machine-local credentials
+- machine-local auth state
 - runtime logs
 
 That separation makes later maintenance safer and keeps the project easier to reason about.

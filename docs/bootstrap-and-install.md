@@ -24,14 +24,17 @@ Optional skip flags:
 6. Start the stack and map `Z:`.
 
 The bootstrap path uses the same runtime defaults as the normal operator scripts.
+Its transcript starts after the prerequisite auth/config checks, so the interactive `rclone config` wizard is not recorded by default.
 
 ## What it does not try to hide
 
 - Remote auth still needs a real Google account and user consent.
 - If `rclone-google:` is not configured yet, the config wizard is still interactive.
+- The repo does not contain Google credentials, tokens, or an auth layer of its own.
 - If `winget` is missing, rclone installation cannot be automated.
 - `Z:` and `127.0.0.1:8080` remain the default V1 values.
 - The local expected drive root is derived from the shared runtime settings, so bootstrap and start stay aligned.
+- Remote re-auth is not automated in V1.
 
 ## After bootstrap
 

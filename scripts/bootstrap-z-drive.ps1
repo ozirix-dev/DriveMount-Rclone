@@ -48,15 +48,7 @@ $runtime = Get-DriveMountRcloneRuntimeSettings -Overrides $PSBoundParameters
 $logDir = Ensure-DriveMountRcloneLogDirectory -ProjectRoot $ProjectRoot -LogDirectoryName $runtime.LogDirectoryName
 $timestamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $transcript = Join-Path $logDir ("bootstrap-z-drive-$timestamp.log")
-
 $transcriptStarted = $false
-try {
-    Start-Transcript -Path $transcript -ErrorAction Stop | Out-Null
-    $transcriptStarted = $true
-}
-catch {
-    Write-Warning "Could not start transcript at $transcript"
-}
 
 function Install-RcloneIfNeeded {
     param(
@@ -120,10 +112,20 @@ function Ensure-RemoteConfigured {
 try {
     Write-Host ''
     Write-Host 'DriveMount-Rclone bootstrap started...'
-    Write-Host "Transcript: $transcript"
 
     $rclonePath = Install-RcloneIfNeeded -AllowInstall (-not $NoInstall)
     Ensure-RemoteConfigured -RclonePath $rclonePath -RemoteName $runtime.RemoteName -AllowConfig (-not $NoRemoteConfig)
+
+    try {
+        Start-Transcript -Path $transcript -ErrorAction Stop | Out-Null
+        $transcriptStarted = $true
+    }
+    catch {
+        Write-Warning "Could not start transcript at $transcript"
+    }
+
+    Write-Host "Transcript: $transcript"
+    Write-Host 'Transcript started after prerequisite auth/config checks.'
 
     $webClient = Get-Service -Name WebClient -ErrorAction SilentlyContinue
     if (-not $webClient) {

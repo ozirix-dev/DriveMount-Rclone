@@ -2,7 +2,7 @@
 
 ## Old source
 
-- `D:\Projects\Scripts\Mount-Rclone`
+- the previous local-only mount project tree
 
 ## What was migrated
 

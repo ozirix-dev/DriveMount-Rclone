@@ -20,3 +20,4 @@ This is the shortest path to the scripts in this repo.
 - If WebDAV is up but mapping fails, check `logs\rclone.log`.
 - If the endpoint is already running, `serve-rclone-google.ps1` should exit cleanly instead of spawning duplicates.
 - If `stop-z-drive.ps1` refuses to stop, the listener does not match the expected project command line.
+- If you plan to share logs publicly, review them first because they may contain local environment details.

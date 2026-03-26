@@ -71,7 +71,10 @@ It uses the same runtime defaults and expected-state checks as the bootstrap, te
 This repo is intended to be usable locally first.
 GitHub is the source of truth for versioned project state, but local scripts remain the immediate operator tool.
 
-Machine-local state such as rclone auth tokens, Windows network mappings, and runtime logs stays outside git.
+The repo does not contain Google credentials, tokens, or an auth layer of its own.
+Machine-local state such as the rclone remote, auth tokens, Windows network mappings, and runtime logs stays outside git.
+If the remote is missing, bootstrap can open the interactive `rclone config` wizard on the local machine.
+Remote re-auth is still a local manual step; it is not automated in V1.
 
 ## Safety
 
@@ -95,6 +98,8 @@ Runtime logs live in `logs\`.
 - rclone logs: `logs\rclone.log`
 
 Logs are ignored by git on purpose.
+Logs are machine-local runtime output and may include local environment details.
+Do not share log files publicly without reviewing them first.
 
 ## Docs
 
@@ -104,6 +109,7 @@ Logs are ignored by git on purpose.
 - `docs\command-reference.md`
 - `docs\tasks-plan.md`
 - `docs\known-risks-and-open-questions.md`
+- `SECURITY.md`
 
 ## Status
 

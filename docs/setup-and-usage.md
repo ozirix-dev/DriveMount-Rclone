@@ -9,6 +9,9 @@
 - an existing rclone remote named `rclone-google:`
 - Windows WebClient service available
 
+The repo does not contain Google credentials, tokens, or its own auth layer.
+The `rclone-google:` remote is machine-local configuration.
+
 ## Fresh machine path
 
 If this is a new machine or the local rclone install is missing, use:
@@ -24,6 +27,8 @@ That bootstrap path will:
 - launch the rclone config wizard if the `rclone-google:` remote is missing
 - start the WebClient service if needed
 - start the stack and map `Z:`
+
+The config wizard is local and interactive when needed; it does not come from this repo.
 
 ## Recommended run order
 
@@ -51,6 +56,7 @@ That bootstrap path will:
 - writes a wrapper transcript log
 
 `bootstrap-z-drive.ps1` is the preferred path for a fresh machine because it can also handle install and remote setup in one pass.
+Its transcript starts only after the interactive auth/config checks, so the local `rclone config` wizard is not captured by default.
 
 Both scripts use the shared runtime defaults from `scripts\DriveMount-Rclone.common.ps1`, so the expected drive root, remote name, and localhost endpoint stay aligned.
 
@@ -60,6 +66,7 @@ Both scripts use the shared runtime defaults from `scripts\DriveMount-Rclone.com
 - `127.0.0.1:8080` is the documented WebDAV endpoint.
 - `rclone-google:` is the expected remote name.
 - Logs are written only to `logs\`.
+- Logs are machine-local runtime output and may contain environment details.
 
 ## How to test
 
@@ -96,6 +103,8 @@ If the wrapper says WebDAV is up but mapping still fails, check the rclone log f
   - WebClient may be unavailable, the endpoint may not be ready, or another mapping may already exist.
 - `Z:` exists in Explorer but not in the current shell
   - refresh the session or rerun the wrapper in the same user context.
+- remote re-auth is still a manual local step
+  - run the bootstrap path and complete the interactive rclone config wizard
 
 ## What is not automated yet
 
