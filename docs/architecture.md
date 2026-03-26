@@ -78,7 +78,7 @@ That separation makes later maintenance safer and keeps the project easier to re
 ## Observed workload behavior
 
 These are practical results from real copy-based tests on this machine's mounted Google Drive path, not guarantees.
-They are more representative for this stack than synthetic local-disk benchmarks such as `fsutil`.
+They describe this setup's observed behavior and are more representative for this stack than synthetic local-disk benchmarks such as `fsutil`.
 
 Observed large-file copy throughput:
 
