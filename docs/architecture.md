@@ -74,3 +74,12 @@ Keeping it separate avoids mixing:
 - runtime logs
 
 That separation makes later maintenance safer and keeps the project easier to reason about.
+
+## Observed workload behavior
+
+These are practical results from local copy tests, not guarantees:
+
+- Large sequential copies: good.
+- Small-file workloads: weak.
+- Parallel small-file copy helps somewhat but remains clearly slower than large-file transfer.
+- Remote cleanup may complete before stale directory entries disappear from the mounted `Z:` view.
