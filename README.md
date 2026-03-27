@@ -2,14 +2,30 @@
 
 Windows infra and automation project for mounting Google Drive via rclone WebDAV as drive `Z:`.
 
-This repo is a clean local-first V1 for:
+This is a small, local-first V1:
 
-- starting the rclone WebDAV serving layer
-- mapping the WebDAV endpoint to `Z:`
-- checking whether the stack is healthy
-- unmapping and stopping the stack safely
-- keeping machine-local logs out of git
-- keeping runtime defaults centralized in `scripts\DriveMount-Rclone.common.ps1`
+- the repo contains the scripts and docs
+- machine-local auth state, drive mappings, and runtime logs stay outside git
+- `scripts\DriveMount-Rclone.common.ps1` is the source of truth for runtime defaults
+- the project is intentionally narrow and is not a general-purpose sync framework
+
+## At a glance
+
+V1 defaults are fixed on purpose:
+
+- remote: `rclone-google:`
+- drive: `Z:`
+- listener: `127.0.0.1:8080`
+- WebDAV URL: `http://localhost:8080/`
+- expected mapped root: `\\localhost@8080\DavWWWRoot`
+
+The usual path is:
+
+1. bootstrap a fresh machine if needed
+2. start the stack
+3. test the stack
+4. unmap the drive when finished
+5. stop the WebDAV listener only if you need to shut it down separately
 
 ## Quick Start
 
@@ -32,14 +48,17 @@ If you need to detach the drive:
 .\scripts\unmap-z-drive.ps1
 ```
 
-## What this solves
+## What success looks like
 
-The practical goal is a stable local drive letter backed by Google Drive through rclone and Windows WebDAV.
+After a successful run, you should see:
 
-The preferred operator path is `start-z-drive.ps1`.
-
-That wrapper performs the normal startup sequence in one place instead of relying on scattered manual steps.
-It uses the same runtime defaults and expected-state checks as the bootstrap, test, and stop scripts.
+- `start-z-drive.ps1` finishes the normal startup sequence
+- `test-z-drive-stack.ps1` reports `All checks passed.`
+- the local listener is up on `127.0.0.1:8080`
+- `Z:` is visible in the current session
+- `Z:` points to `\\localhost@8080\DavWWWRoot`
+- wrapper logs appear under `logs\start-z-drive-*.log`
+- rclone logs appear in `logs\rclone.log`
 
 ## Script Map
 
@@ -51,20 +70,33 @@ It uses the same runtime defaults and expected-state checks as the bootstrap, te
 - `scripts\unmap-z-drive.ps1` removes `Z:`
 - `scripts\stop-z-drive.ps1` stops the project-controlled WebDAV process
 
-## What is in scope
+## Recommended Operator Flow
 
-- Windows + PowerShell automation
-- local drive-letter mapping
-- local logs and troubleshooting
-- GitHub-ready repo structure
+For normal use, keep the flow simple:
 
-## What is out of scope for V1
+1. run `scripts\start-z-drive.ps1`
+2. run `scripts\test-z-drive-stack.ps1`
+3. work from `Z:`
+4. run `scripts\unmap-z-drive.ps1` when you want to detach the drive
+5. run `scripts\stop-z-drive.ps1` only if you want to stop the local WebDAV listener itself
 
-- new app features
-- scheduled task management in this round
-- machine-wide configuration changes beyond what the scripts themselves already need at runtime
-- generalized multi-cloud abstraction
-- destructive cleanup of unrelated files
+`scripts\bootstrap-z-drive.ps1` is the first-run path when rclone, the remote, or WebClient need setup.
+
+## Good Fit
+
+This stack fits well when you want:
+
+- a stable local drive letter backed by Google Drive through rclone and Windows WebDAV
+- a small, explicit operator flow instead of scattered manual steps
+- a repo that keeps machine-local state out of version control
+- a setup optimized for larger files and archive-style workflows
+
+It is a weaker fit when you need:
+
+- many tiny files copied in large volumes
+- immediate delete visibility in the mounted folder view
+- a generic multi-cloud abstraction
+- a replacement for a broader sync platform
 
 ## Local vs GitHub
 
