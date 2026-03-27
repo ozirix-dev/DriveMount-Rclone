@@ -19,8 +19,6 @@ V1 defaults are fixed on purpose:
 - WebDAV URL: `http://localhost:8080/`
 - expected mapped root: `\\localhost@8080\DavWWWRoot`
 
-The normal operator sequence is below.
-
 ## Quick Start
 
 Fresh machine or first-time setup:
@@ -82,7 +80,7 @@ For normal use:
 
 `scripts\bootstrap-z-drive.ps1` is the first-run path when rclone, the remote, or WebClient need setup.
 
-## Good Fit
+## When this fits well
 
 This stack fits when you want:
 
