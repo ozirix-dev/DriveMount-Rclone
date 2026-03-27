@@ -2,12 +2,12 @@
 
 Windows infra and automation project for mounting Google Drive via rclone WebDAV as drive `Z:`.
 
-This is a small, local-first V1:
+This is a small, local-first V1.
 
-- the repo contains the scripts and docs
+- the repo contains scripts and docs
 - machine-local auth state, drive mappings, and runtime logs stay outside git
 - `scripts\DriveMount-Rclone.common.ps1` is the source of truth for runtime defaults
-- the project is intentionally narrow and is not a general-purpose sync framework
+- the project is intentionally narrow, not a general-purpose sync framework
 
 ## At a glance
 
@@ -19,7 +19,7 @@ V1 defaults are fixed on purpose:
 - WebDAV URL: `http://localhost:8080/`
 - expected mapped root: `\\localhost@8080\DavWWWRoot`
 
-The normal operator sequence is described below.
+The normal operator sequence is below.
 
 ## Quick Start
 
@@ -29,7 +29,7 @@ Fresh machine or first-time setup:
 .\scripts\bootstrap-z-drive.ps1
 ```
 
-Normal day-to-day start:
+Daily start:
 
 ```powershell
 .\scripts\start-z-drive.ps1
@@ -42,7 +42,7 @@ If you need to detach the drive:
 .\scripts\unmap-z-drive.ps1
 ```
 
-If you also want to stop the local WebDAV listener:
+To stop the local WebDAV listener too:
 
 ```powershell
 .\scripts\stop-z-drive.ps1
@@ -54,11 +54,11 @@ After a successful run, you should see:
 
 - `start-z-drive.ps1` finishes the normal startup sequence
 - `test-z-drive-stack.ps1` reports `All checks passed.`
-- the local listener is up on `127.0.0.1:8080`
+- the listener is up on `127.0.0.1:8080`
 - `Z:` is visible in the current session
 - `Z:` points to `\\localhost@8080\DavWWWRoot`
-- wrapper logs appear under `logs\start-z-drive-*.log`
-- rclone logs appear in `logs\rclone.log`
+- wrapper logs are written to `logs\start-z-drive-*.log`
+- rclone logs are written to `logs\rclone.log`
 
 ## Script Map
 
@@ -72,7 +72,7 @@ After a successful run, you should see:
 
 ## Recommended Operator Flow
 
-For normal use, keep the flow simple:
+For normal use:
 
 1. run `scripts\start-z-drive.ps1`
 2. run `scripts\test-z-drive-stack.ps1`
@@ -84,28 +84,28 @@ For normal use, keep the flow simple:
 
 ## Good Fit
 
-This stack fits well when you want:
+This stack fits when you want:
 
 - a stable local drive letter backed by Google Drive through rclone and Windows WebDAV
 - a small, explicit operator flow instead of scattered manual steps
 - a repo that keeps machine-local state out of version control
-- a setup optimized for larger files and archive-style workflows
+- a setup suited to larger files and archive-style workflows
 
 It is a weaker fit when you need:
 
-- many tiny files copied in large volumes
+- lots of tiny files copied in large volumes
 - immediate delete visibility in the mounted folder view
-- a generic multi-cloud abstraction
+- a generic multi-cloud layer
 - a replacement for a broader sync platform
 
 ## Local vs GitHub
 
-This repo is intended to be usable locally first.
-GitHub is the source of truth for versioned project state, but local scripts remain the immediate operator tool.
+This repo is local-first.
+GitHub is the source of truth for versioned project state, while local scripts remain the operator tool.
 
-The repo does not contain Google credentials, tokens, or an auth layer of its own.
+The repo does not contain Google credentials, tokens, or its own auth layer.
 Machine-local state such as the rclone remote, auth tokens, Windows network mappings, and runtime logs stays outside git.
-If the remote is missing, bootstrap can open the interactive `rclone config` wizard on the local machine.
+If the remote is missing, bootstrap can open the interactive `rclone config` wizard locally.
 Remote re-auth is still a local manual step; it is not automated in V1.
 
 ## Safety
@@ -131,7 +131,7 @@ Runtime logs live in `logs\`.
 - rclone logs: `logs\rclone.log`
 
 Logs are ignored by git on purpose.
-Logs are machine-local runtime output and may include local environment details.
+Logs are machine-local output and may include local environment details.
 Do not share log files publicly without reviewing them first.
 
 ## Docs
@@ -147,6 +147,6 @@ Do not share log files publicly without reviewing them first.
 ## Status
 
 This repo is intentionally small, focused, and public-safe.
-It is a documented working solution for one Windows mount setup, not a general-purpose sync framework.
+It is a documented solution for one Windows mount setup, not a general-purpose sync framework.
 
 License: MIT. See [LICENSE](LICENSE).
