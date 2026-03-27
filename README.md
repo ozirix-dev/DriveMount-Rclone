@@ -19,14 +19,7 @@ V1 defaults are fixed on purpose:
 - WebDAV URL: `http://localhost:8080/`
 - expected mapped root: `\\localhost@8080\DavWWWRoot`
 
-The usual path is:
-
-1. bootstrap a fresh machine if needed
-2. start the stack
-3. test the stack
-4. unmap the drive when finished
-
-Use `scripts\stop-z-drive.ps1` only if you need to stop the local listener separately.
+The normal operator sequence is described below.
 
 ## Quick Start
 
