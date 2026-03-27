@@ -25,7 +25,8 @@ The usual path is:
 2. start the stack
 3. test the stack
 4. unmap the drive when finished
-5. stop the WebDAV listener only if you need to shut it down separately
+
+Use `scripts\stop-z-drive.ps1` only if you need to stop the local listener separately.
 
 ## Quick Start
 
@@ -46,6 +47,12 @@ If you need to detach the drive:
 
 ```powershell
 .\scripts\unmap-z-drive.ps1
+```
+
+If you also want to stop the local WebDAV listener:
+
+```powershell
+.\scripts\stop-z-drive.ps1
 ```
 
 ## What success looks like
@@ -118,6 +125,7 @@ Safe to run:
 
 Potentially state-changing:
 
+- `scripts\bootstrap-z-drive.ps1`
 - `scripts\serve-rclone-google.ps1`
 - `scripts\map-z-drive.ps1`
 - `scripts\stop-z-drive.ps1`
