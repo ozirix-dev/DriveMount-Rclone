@@ -28,6 +28,12 @@ This repository is a Windows infra and automation project, not an application re
 - Prefer script syntax checks and status checks over runtime side effects.
 - If runtime verification is needed, keep it read-only or explicitly non-destructive.
 
+## File safety
+
+- Do not delete files, folders, or other local artifacts without explicit user confirmation.
+- Before any destructive removal, ask for confirmation in a clear yes/no form.
+- Only proceed with deletion after the user has explicitly answered `Kyllä`.
+
 ## Logging
 
 - Treat `logs\` as machine-local runtime output.
