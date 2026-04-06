@@ -2,6 +2,16 @@
 
 This repository is a Windows infra and automation project, not an application repo.
 
+## Root-level defaults
+
+- Also read `D:\AGENTS.md` when a task touches cross-repo workflow, shorthand commands, shared local security practice, or Cloudflare authority.
+- Treat the following root-level rules as active here too unless this repo file is stricter:
+  - `c` = commit, `p` = push, `r` = add/update ReportHub, `cpr` = commit + push + report for the current repo task
+  - run a ReportHub pass after larger work without needing a separate prompt
+  - Cloudflare has standing permission for scoped non-destructive read/write work; ask before destructive or hard-to-reverse changes
+  - secrets belong in the `K:\` vault by default, not in repo trees or temporary work areas
+- If `D:\AGENTS.md` and this repo file differ, follow the stricter rule and keep DriveMount-Rclone-specific infra and safety rules authoritative for this repo.
+
 ## Working rules
 
 - Read the docs before editing scripts.
