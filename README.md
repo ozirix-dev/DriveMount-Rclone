@@ -62,6 +62,7 @@ After a successful run, you should see:
 
 - `scripts\bootstrap-z-drive.ps1` installs or configures prerequisites, then starts the stack
 - `scripts\start-z-drive.ps1` boots the full stack
+- `scripts\start-z-drive-hidden.vbs` is the hidden scheduled-task launcher for `start-z-drive.ps1`
 - `scripts\serve-rclone-google.ps1` starts the WebDAV serving layer
 - `scripts\map-z-drive.ps1` maps `Z:`
 - `scripts\test-z-drive-stack.ps1` performs read-only checks
@@ -140,6 +141,7 @@ Do not share log files publicly without reviewing them first.
 - `docs\command-reference.md`
 - `docs\tasks-plan.md`
 - `docs\known-risks-and-open-questions.md`
+- `docs\z-drive-disconnect-investigation.md`
 - `SECURITY.md`
 
 ## Status

@@ -33,6 +33,9 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+$common = Join-Path $PSScriptRoot 'DriveMount-Rclone.common.ps1'
+. $common
+
 $serveScript = Join-Path $PSScriptRoot 'serve-rclone-google.ps1'
 $mapScript = Join-Path $PSScriptRoot 'map-z-drive.ps1'
 $runtime = Get-DriveMountRcloneRuntimeSettings -Overrides $PSBoundParameters
