@@ -15,3 +15,6 @@ Desktop.ini
 *.user
 *.suo
 *.cache
+
+DriveMount-Rclone-Backup/*
+!DriveMount-Rclone-Backup/README.md
