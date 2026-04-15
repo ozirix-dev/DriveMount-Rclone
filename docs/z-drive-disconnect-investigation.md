@@ -9,7 +9,7 @@ Record the current investigation into why `Z:` disappears even though a watchdog
 
 ## Scope
 
-- `D:\DriveMount-Rclone` scripts and docs
+- `D:\Projects\Systems\DriveMount-Rclone` scripts and docs
 - read-only inspection of the active workstation runtime state
 - read-only inspection of the legacy scheduled-task scripts under `D:\tools\Mount-Rclone`
 
@@ -101,19 +101,19 @@ With explicit user approval, the live scheduled-task surface on this machine was
 ### Task changes
 
 - Backups were exported to:
-  - `D:\DriveMount-Rclone\logs\task-backups-20260412-1415\Serve_Rclone_WebDAV.xml`
-  - `D:\DriveMount-Rclone\logs\task-backups-20260412-1415\Z_Drive_Keep_Alive.xml`
+  - `D:\Projects\Systems\DriveMount-Rclone\logs\task-backups-20260412-1415\Serve_Rclone_WebDAV.xml`
+  - `D:\Projects\Systems\DriveMount-Rclone\logs\task-backups-20260412-1415\Z_Drive_Keep_Alive.xml`
 - `Serve Rclone WebDAV` now runs:
-  - `powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File "D:\DriveMount-Rclone\scripts\start-z-drive.ps1"`
+  - `powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File "D:\Projects\Systems\DriveMount-Rclone\scripts\start-z-drive.ps1"`
 - `Z Drive Keep Alive` now runs the same repo wrapper:
-  - `powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File "D:\DriveMount-Rclone\scripts\start-z-drive.ps1"`
+  - `powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File "D:\Projects\Systems\DriveMount-Rclone\scripts\start-z-drive.ps1"`
 - Both tasks now run with:
   - `LogonType = Interactive`
   - `RunLevel = Highest`
 - Both tasks now launch through:
-  - `wscript.exe "D:\DriveMount-Rclone\scripts\start-z-drive-hidden.vbs"`
+  - `wscript.exe "D:\Projects\Systems\DriveMount-Rclone\scripts\start-z-drive-hidden.vbs"`
 - The hidden launcher then runs:
-  - `powershell.exe -NoProfile -ExecutionPolicy Bypass -File "D:\DriveMount-Rclone\scripts\start-z-drive.ps1"`
+  - `powershell.exe -NoProfile -ExecutionPolicy Bypass -File "D:\Projects\Systems\DriveMount-Rclone\scripts\start-z-drive.ps1"`
 - This removed the visible console-window flashing that still occurred with direct `powershell.exe -WindowStyle Hidden` task actions.
 
 ### Important note
@@ -143,9 +143,9 @@ The repaired keep-alive path was verified with a controlled recovery test:
 On 13 April 2026 the live tasks were switched from direct `powershell.exe` actions to the hidden `wscript.exe` launcher wrapper.
 
 - Verified task action for `Serve Rclone WebDAV`:
-  - `wscript.exe "D:\DriveMount-Rclone\scripts\start-z-drive-hidden.vbs"`
+  - `wscript.exe "D:\Projects\Systems\DriveMount-Rclone\scripts\start-z-drive-hidden.vbs"`
 - Verified task action for `Z Drive Keep Alive`:
-  - `wscript.exe "D:\DriveMount-Rclone\scripts\start-z-drive-hidden.vbs"`
+  - `wscript.exe "D:\Projects\Systems\DriveMount-Rclone\scripts\start-z-drive-hidden.vbs"`
 - Repeated the controlled break-and-recover test after the launcher swap:
   - unmap `Z:`
   - stop `WebClient`
@@ -208,7 +208,7 @@ That bug did not cause the live disconnect on this machine, because the active s
 - `WebClient` is running.
 - `Z:` is currently mapped to `\\localhost@8080\DavWWWRoot`.
 - `.\scripts\test-z-drive-stack.ps1` currently passes.
-- The live tasks now point to `D:\DriveMount-Rclone` instead of `D:\tools\Mount-Rclone`.
+- The live tasks now point to `D:\Projects\Systems\DriveMount-Rclone` instead of `D:\tools\Mount-Rclone`.
 - The live keep-alive task has been verified to recover a broken mount/service state on demand.
 - The live tasks now launch through a hidden `wscript.exe` wrapper instead of a visible `powershell.exe` console action.
 
