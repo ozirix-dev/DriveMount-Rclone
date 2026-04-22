@@ -1,0 +1,30 @@
+{
+  "globs": [
+    "**/*.md"
+  ],
+  "ignores": [
+    "**/node_modules/**",
+    "**/vendor/**",
+    "**/.venv/**",
+    "**/venv/**",
+    "**/.tox/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/coverage/**",
+    "**/playwright-report/**",
+    "**/tmp/**",
+    "**/logs/**",
+    "**/*-Backup/**",
+    "**/wp-admin/**",
+    "**/wp-includes/**",
+    "**/wp-content/plugins/**",
+    "**/wp-content/themes/**",
+    "**/wp-content/uploads/**",
+    "**/wordpress/**"
+  ],
+  "config": {
+    "default": false,
+    "MD011": true,
+    "MD042": true
+  }
+}
