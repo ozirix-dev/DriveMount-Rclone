@@ -8,6 +8,8 @@
 - The default WebDAV URL is `http://localhost:8080/`.
 - The default mapped drive is `Z:`.
 - The expected mapped UNC root is `\\localhost@8080\DavWWWRoot`.
+- `Z:` is mapped non-persistently by the wrapper so Explorer does not restore
+  it before the local WebDAV listener is ready.
 - The local remote config is machine-specific and lives outside git.
 - The repo does not store Google credentials, tokens, or its own auth layer.
 - Listener checks now verify that the port owner matches the expected project `rclone serve webdav` command line before stop/test actions proceed.

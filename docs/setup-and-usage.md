@@ -55,6 +55,10 @@ The config wizard is local and interactive when needed; it does not come from th
 - maps `Z:`
 - writes a wrapper transcript log
 
+The `Z:` mapping is intentionally created as non-persistent. Scheduled startup
+should run the wrapper after logon instead of letting Explorer restore a stale
+WebDAV connection before the local rclone listener is ready.
+
 `bootstrap-z-drive.ps1` is the preferred path for a fresh machine because it can also handle install and remote setup in one pass.
 Its transcript starts only after the interactive auth/config checks, so the local `rclone config` wizard is not captured by default.
 
@@ -101,6 +105,8 @@ If the wrapper says WebDAV is up but mapping still fails, check the rclone log f
   - the WebDAV process did not start or exited early.
 - `Z: mapping failed`
   - WebClient may be unavailable, the endpoint may not be ready, or another mapping may already exist.
+- Explorer shows a `Restoring Network Connections` error for `Z:`
+  - remove the stale remembered mapping and rerun `start-z-drive.ps1`; the wrapper should recreate `Z:` after the listener is ready.
 - `Z:` exists in Explorer but not in the current shell
   - refresh the session or rerun the wrapper in the same user context.
 - remote re-auth is still a manual local step

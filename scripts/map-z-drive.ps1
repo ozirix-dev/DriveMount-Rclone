@@ -67,7 +67,7 @@ if ($driveState.DriveVisibleInShell) {
 
 Write-Host ''
 Write-Host "Mapping $($runtime.DriveLetter) drive..."
-net use $($runtime.DriveLetter) $runtime.WebDavUrl /user:ignored ignored /persistent:yes | Out-Null
+net use $($runtime.DriveLetter) $runtime.WebDavUrl /user:ignored ignored /persistent:no | Out-Null
 
 if ($LASTEXITCODE -eq 0) {
     $driveState = Test-DriveMountRcloneDriveMappingState -RuntimeSettings $runtime
