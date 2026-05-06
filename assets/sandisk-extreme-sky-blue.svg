@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="SanDisk Extreme Sky Blue SSD icon">
+  <defs>
+    <linearGradient id="body" x1="70" y1="28" x2="190" y2="232" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d6f1fb"/>
+      <stop offset="0.45" stop-color="#a9d8e8"/>
+      <stop offset="1" stop-color="#76b8cf"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="54" y1="36" x2="204" y2="226" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#a6d9e8"/>
+      <stop offset="1" stop-color="#5aa7c1"/>
+    </linearGradient>
+    <linearGradient id="loop" x1="169" y1="50" x2="219" y2="101" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffd646"/>
+      <stop offset="0.58" stop-color="#eba800"/>
+      <stop offset="1" stop-color="#c87900"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#15323d" flood-opacity="0.24"/>
+    </filter>
+    <pattern id="dots" width="10" height="10" patternUnits="userSpaceOnUse">
+      <circle cx="3.5" cy="3.5" r="1.45" fill="#3d5d68" opacity="0.7"/>
+    </pattern>
+    <clipPath id="bodyClip">
+      <path d="M67 23h78c31 0 54 22 54 53v128c0 21-17 38-38 38H80c-21 0-38-17-38-38V48c0-14 11-25 25-25Z"/>
+    </clipPath>
+  </defs>
+
+  <path fill="#000" opacity="0.12" d="M76 242h77c28 0 47-19 47-45V79c0-40-24-63-65-63H79c-25 0-42 17-42 42v137c0 26 18 47 39 47Z" filter="url(#shadow)"/>
+
+  <path fill="url(#edge)" d="M67 18h78c34 0 60 25 60 59v127c0 25-20 45-45 45H80c-25 0-45-20-45-45V50c0-18 14-32 32-32Z"/>
+  <path fill="url(#body)" d="M70 29h72c28 0 51 22 51 50v122c0 19-15 34-34 34H83c-19 0-34-15-34-34V50c0-12 9-21 21-21Z"/>
+  <path clip-path="url(#bodyClip)" fill="url(#dots)" opacity="0.8" d="M52 37h115v190H52z"/>
+
+  <path fill="#86c6d9" opacity="0.75" d="M71 35h65c25 0 45 20 45 45v119c0 14-11 25-25 25H86c-14 0-25-11-25-25V49c0-8 3-14 10-14Z"/>
+  <path fill="url(#dots)" opacity="0.75" d="M71 46h94v165H71z"/>
+
+  <path fill="url(#loop)" d="M165 43c6-10 18-16 31-13 18 4 28 18 28 37v43c0 8-6 14-14 14-4 0-8-2-11-4l-33-25c-6-5-10-12-10-20V60c0-6 3-12 9-17Z"/>
+  <path fill="#f9fdff" d="M180 55c3-5 9-8 16-7 8 2 14 9 14 19v36l-31-22c-3-3-5-6-5-10v-7c0-3 2-7 6-9Z"/>
+  <path fill="#ca8200" opacity="0.35" d="M197 48c7 2 13 9 13 19v36l-8-6V68c0-9-4-15-12-19 2-1 5-1 7-1Z"/>
+
+  <path fill="#eaf8fc" opacity="0.72" d="M82 61h47c5 0 9 4 9 9s-4 9-9 9H82c-5 0-9-4-9-9s4-9 9-9Z"/>
+  <text x="121" y="143" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" fill="#f5fdff" opacity="0.86">SanDisk</text>
+  <path fill="#4f9db9" opacity="0.55" d="M53 199c0 18 14 32 32 32h72c18 0 32-14 32-32v-9c-9 19-23 28-44 28H91c-22 0-35-8-38-24v5Z"/>
+</svg>
